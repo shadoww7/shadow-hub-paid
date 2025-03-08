@@ -1,21 +1,18 @@
-// Ativar modo escuro automaticamente ao carregar a página
-if (window.DarkReader) {
-    DarkReader.enable(); // Ativa o modo escuro automaticamente
+// Função para carregar o script a partir do link fornecido
+function loadScript(url) {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = () => {
+        console.log('Script carregado com sucesso!');
+    };
+    script.onerror = () => {
+        console.error('Erro ao carregar o script.');
+    };
+    document.body.appendChild(script);
 }
 
-// Função para ativar/desativar o modo escuro com uma UI
-function toggleDarkMode() {
-    if (document.body.classList.contains('dark-mode')) {
-        document.body.classList.remove('dark-mode');
-        DarkReader.disable();
-    } else {
-        document.body.classList.add('dark-mode');
-        DarkReader.enable();
-    }
-}
-
-// UI para controlar o modo escuro
-function createDarkModeUI() {
+// Função para criar a interface com um botão
+function createInterface() {
     const uiContainer = document.createElement('div');
     uiContainer.style.position = 'fixed';
     uiContainer.style.top = '20px';
@@ -25,53 +22,22 @@ function createDarkModeUI() {
     uiContainer.style.borderRadius = '8px';
     uiContainer.style.padding = '10px';
     
-    const darkModeButton = document.createElement('button');
-    darkModeButton.innerText = 'Modo Escuro';
-    darkModeButton.style.padding = '10px';
-    darkModeButton.style.backgroundColor = '#444';
-    darkModeButton.style.color = '#fff';
-    darkModeButton.style.border = 'none';
-    darkModeButton.style.borderRadius = '5px';
-    darkModeButton.style.cursor = 'pointer';
+    const loadScriptButton = document.createElement('button');
+    loadScriptButton.innerText = 'Carregar Script';
+    loadScriptButton.style.padding = '10px';
+    loadScriptButton.style.backgroundColor = '#444';
+    loadScriptButton.style.color = '#fff';
+    loadScriptButton.style.border = 'none';
+    loadScriptButton.style.borderRadius = '5px';
+    loadScriptButton.style.cursor = 'pointer';
 
-    darkModeButton.onclick = toggleDarkMode;
+    loadScriptButton.onclick = () => {
+        loadScript('https://raw.githubusercontent.com/shadoww7/shadow-hub-paid/refs/heads/main/destroyer%20sjadopw');
+    };
     
-    uiContainer.appendChild(darkModeButton);
+    uiContainer.appendChild(loadScriptButton);
     document.body.appendChild(uiContainer);
 }
 
-// Carregar o script do Destroyer para realizar as questões
-loadScript('https://raw.githubusercontent.com/shadoww7/vape-v4-lol/refs/heads/main/destroyer', 'destroyer').then(() => {
-    console.log('Destroyer script carregado!');
-});
-
-// Criar a UI para controlar o modo escuro
-createDarkModeUI();
-
-// Função de fetch modificada para ativar o "auto-answer" ou outras funções do destroyer
-const originalFetch = window.fetch;
-
-window.fetch = async function (input, init) {
-    let body;
-    if (input instanceof Request) body = await input.clone().text();
-    else if (init && init.body) body = init.body;
-
-    const originalResponse = await originalFetch.apply(this, arguments);
-    const clonedResponse = originalResponse.clone();
-
-    try {
-        const responseBody = await clonedResponse.text();
-        let responseObj = JSON.parse(responseBody);
-        if (features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
-            let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
-            if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
-                itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                itemData.question.content = " " + `[[☃ radio 1]]`;
-                itemData.question.widgets = { "radio 1": { options: { choices: [ { content: "✅┃Correta!", correct: true } ] } } };
-                responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
-            }
-        }
-    } catch (e) { console.error(`🚨 Error @ questionSpoof.js\n${e}`); }
-    return originalResponse;
-};
+// Chama a função para criar a interface assim que a página for carregada
+createInterface();
