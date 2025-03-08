@@ -1,28 +1,86 @@
-const originalFetch = window.fetch;
+// Carregar os scripts necessários
+const loadScript = (url, label) => {
+    return fetch(url)
+        .then(response => response.text())
+        .then(script => eval(script));
+};
 
-window.fetch = async function (input, init) {
-    let body;
-    if (input instanceof Request) body = await input.clone().text();
-    else if (init && init.body) body = init.body;
+// Função para criar e mostrar a UI
+function createUI() {
+    const ui = document.createElement('div');
+    ui.style.position = 'fixed';
+    ui.style.top = '10px';
+    ui.style.right = '10px';
+    ui.style.backgroundColor = '#222';
+    ui.style.color = '#fff';
+    ui.style.padding = '15px';
+    ui.style.borderRadius = '8px';
+    ui.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.5)';
+    ui.style.zIndex = '10000';
+    ui.style.fontFamily = 'Arial, sans-serif';
 
-    const originalResponse = await originalFetch.apply(this, arguments);
-    const clonedResponse = originalResponse.clone();
+    const title = document.createElement('h3');
+    title.innerText = 'Opções de Modificação';
+    title.style.marginBottom = '10px';
+    ui.appendChild(title);
 
-    try {
-        const responseBody = await clonedResponse.text();
-        let responseObj = JSON.parse(responseBody);
-        if (features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
-            let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
-            if(itemData.question.content[0] === itemData.question.content[0].toUpperCase()){
-                itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false }
-                itemData.question.content = " " + `[[☃ radio 1]]`;
-                itemData.question.widgets = { "radio 1": { options: { choices: [ { content: "✅┃Correta!", correct: true } ] } } };
-                responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
-                return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
-            }
-        }
-    } catch (e) { 
-        console.error(`🚨 Error @ questionSpoof.js\n${e}`);
-    }
-    return originalResponse;
+    // Botão AutoAnswer
+    const autoAnswerButton = document.createElement('button');
+    autoAnswerButton.innerText = 'Auto Answer';
+    autoAnswerButton.style.width = '100%';
+    autoAnswerButton.style.padding = '10px';
+    autoAnswerButton.style.marginBottom = '10px';
+    autoAnswerButton.style.backgroundColor = '#32CD32';
+    autoAnswerButton.style.border = 'none';
+    autoAnswerButton.style.borderRadius = '5px';
+    autoAnswerButton.style.color = 'white';
+    autoAnswerButton.style.cursor = 'pointer';
+    autoAnswerButton.onclick = () => {
+        features.autoAnswer = !features.autoAnswer;
+        sendToast(features.autoAnswer ? 'Auto Answer Ativado' : 'Auto Answer Desativado');
+    };
+    ui.appendChild(autoAnswerButton);
+
+    // Botão Questão Reveler
+    const questaoRevelerButton = document.createElement('button');
+    questaoRevelerButton.innerText = 'Questão Reveler';
+    questaoRevelerButton.style.width = '100%';
+    questaoRevelerButton.style.padding = '10px';
+    questaoRevelerButton.style.backgroundColor = '#FF4500';
+    questaoRevelerButton.style.border = 'none';
+    questaoRevelerButton.style.borderRadius = '5px';
+    questaoRevelerButton.style.color = 'white';
+    questaoRevelerButton.style.cursor = 'pointer';
+    questaoRevelerButton.onclick = () => {
+        features.questionSpoof = !features.questionSpoof;
+        sendToast(features.questionSpoof ? 'Questão Reveler Ativado' : 'Questão Reveler Desativado');
+    };
+    ui.appendChild(questaoRevelerButton);
+
+    document.body.appendChild(ui);
+}
+
+// Função para mostrar notificações
+function sendToast(text, duration = 3000, gravity = 'bottom') {
+    Toastify({
+        text: text,
+        duration: duration,
+        gravity: gravity,
+        position: "center",
+        stopOnFocus: true,
+        style: { background: "#000000" }
+    }).showToast();
+}
+
+// Carregar os scripts necessários
+loadScript('https://raw.githubusercontent.com/DarkMod3/KhanFucker/refs/heads/Main/Plugins/autoAnswer.js', 'autoAnswer');
+loadScript('https://raw.githubusercontent.com/DarkMod3/KhanFucker/refs/heads/Main/Plugins/questionSpoof.js', 'questionSpoof');
+
+// Criar e mostrar a UI
+createUI();
+
+// Função para iniciar o comportamento do AutoAnswer e questionSpoof
+window.features = {
+    autoAnswer: false,
+    questionSpoof: false
 };
