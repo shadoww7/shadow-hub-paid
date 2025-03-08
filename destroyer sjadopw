@@ -221,5 +221,3 @@ loadScript('https://cdn.jsdelivr.net/npm/toastify-js', 'toastifyPlugin')
         console.clear();
         console.log(" \n  ______          _    \n |  ____|        | |   \n | |__ _   _  ___| | __\n |  __| | | |/ __| |/ /\n | |  | |_| | (__|   < \n |_|   \\__,_|\\___|_|\\_\\\n ");
     });
-
-tira o trem de entra no discord pra usa
