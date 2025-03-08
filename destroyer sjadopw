@@ -129,18 +129,6 @@ function showPopup() {
     text.style.fontSize = '18px';
     text.style.marginTop = '10px';
     
-    const discordButton = document.createElement('button');
-    discordButton.innerText = 'Entrar no Server';
-    discordButton.style.marginTop = '20px';
-    discordButton.style.padding = '10px';
-    discordButton.style.backgroundColor = '#7289da';
-    discordButton.style.border = 'none';
-    discordButton.style.borderRadius = '5px';
-    discordButton.style.color = 'white';
-    discordButton.onclick = () => {
-        window.open('https://discord.gg/gamesdest', '_blank');
-    };
-
     const closeButton = document.createElement('span');
     closeButton.innerText = 'X';
     closeButton.style.position = 'absolute';
@@ -154,7 +142,6 @@ function showPopup() {
     popup.appendChild(closeButton);
     popup.appendChild(image);
     popup.appendChild(text);
-    popup.appendChild(discordButton);
     document.body.appendChild(popup);
 }
 
