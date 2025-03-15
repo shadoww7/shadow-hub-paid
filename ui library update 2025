@@ -4622,10 +4622,10 @@ function library:CreateSettingsTab(menu)
     local creditsSection = settingsTab:AddSection('Credits', 2);
     creditsSection:AddSeparator({text = 'Owners/Developers'});
     creditsSection:AddText({text = "shadow7"})
-    creditsSection:AddText({text = "rajeipouco"})
+    creditsSection:AddText({text = "this ui is free"})
     creditsSection:AddSeparator({text = 'Helpers'});
-    creditsSection:AddText({text = "pota"})
-    creditsSection:AddText({text = "snowzinz777"})
+    creditsSection:AddText({text = "If you bought it, you were scammed."})
+    creditsSection:AddText({text = "made by amogatinhossss on discord"})
 
 
     configSection:AddBox({text = 'Config Name', flag = 'configinput'})
